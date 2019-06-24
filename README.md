@@ -1,4 +1,4 @@
-![Calculator](./docs/calculator_logo.png)
+![Calculator](./docs/calculator_logo_small.png)
 # Calculator - Earthquake Precursors Data Conversion Framework
 
 This service is part of our [Earthquake Data Assimilation System](https://github.com/encresearch/data-assimilation-system).
