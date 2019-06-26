@@ -65,4 +65,9 @@ def sensor_MQ131(adc_value):
 
     return (ppm_Ozone, ppm_ChlorineGas, ppm_NitrogenDioxide)
 
-print(sensor_MQ131(10000))
+sensor_functions = {
+                    1: {1: 'adc_1_channel_1', 2: 'adc_1_channel_2', 3: 'adc_1_channel_3', 4: 'adc_1_channel_4'},
+                    2: {1: 'adc_2_channel_1', 2: 'adc_2_channel_2', 3: 'adc_2_channel_3', 4: 'adc_2_channel_4'},
+                    3: {1: 'adc_3_channel_1', 2: 'adc_3_channel_2', 3: 'adc_3_channel_3', 4: 'adc_3_channel_4'},
+                    4: {1: 'adc_4_channel_1', 2: 'adc_4_channel_2', 3: 'adc_4_channel_3', 4: 'adc_4_channel_4'}
+                   }
