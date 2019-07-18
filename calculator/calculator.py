@@ -50,7 +50,10 @@ def main():
 
         payload = message.payload.decode()
         print("Message Received")
-        newDataIndexes = json.loads(payload)
+
+
+
+        location, newDataIndexes = json.loads(payload)
 
         converted_data = [] #Array to store converted Data that will all be pushed to influxDB after all conversions
         inspectorPayload = [] #Array that will store index information on the new data added to send to inspector
@@ -71,10 +74,13 @@ def main():
 
             #Getting name of sensor to add to array that will be sent to inspector
             sensorNames, _, _, = sensor_functions[adc][channel](data[0][1])
+            print(sensorNames)
             #Building Array that will be sent to inspector
             if len(sensorNames) == 1:
-                inspectorPayload.append(dict(sensorName=sensorName[0], adc=adc, channel=channel, amountOfNewData=newDataAmount))
+                print("1")
+                inspectorPayload.append(dict(sensorName=sensorNames[0], adc=adc, channel=channel, amountOfNewData=newDataAmount))
             else:
+                print(2)
                 for sensor in sensorNames:
                     inspectorPayload.append(dict(sensorName=sensor, adc=adc, channel=channel, amountOfNewData=newDataAmount))
 
@@ -93,7 +99,7 @@ def main():
                 else:
                     for j in range(lengthOfConverted):
                         newData = converted[j]
-                        converted_data.append(dict(dict(adc=adc, channel=channel, sensorName=sensorName[j], units=units[j], timestamp=timestamp, data=newData)))
+                        converted_data.append(dict(dict(adc=adc, channel=channel, sensorName=sensorName[j],  units=units[j], timestamp=timestamp, data=newData)))
 
         print("Conversions Done")
 
@@ -120,14 +126,17 @@ def main():
             sub_df = grouped.get_group(group)[['data']]
             sub_df.rename(columns={'date_time': 'date_time', 'data': str(units)}, inplace=True)
 
-            influxdb.df_client.write_points(sub_df, sensorName, tags=tags)
+            measurementName = location +  "_" + sensorName
 
-            print(f"Written {sensorName} to database")
+            influxdb.df_client.write_points(sub_df, measurementName, tags=tags)
+
+            print(f"Written {measurementName} to database: " + str(sub_df.iloc[[0]]))
 
 
 
         #Potential Issue. Message still sends even if data fails to get pushed to influx because of try/except statement
-        client.publish(topic_inspector, json.dumps(inspectorPayload))
+        print(inspectorPayload)
+        client.publish(topic_inspector, json.dumps([location, inspectorPayload]))
         print("Published to Inspector")
         pass
 

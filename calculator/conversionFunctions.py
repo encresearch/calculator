@@ -70,11 +70,17 @@ def sensor_MQ131(adc_value):
            [ppm_Ozone, ppm_ChlorineGas, ppm_NitrogenDioxide])
 
 
-def conversionFunctionTemplate(adc_value):
+def conversionFunctionTemplate(adc_value, inc):
 
     value = adc_value
 
-    return (["Sensor Name"],
+    return (["Sensor Name" + inc],
+           ["Units"],
+           [value-1000])
+
+def testing(adc_value):
+    value = adc_value
+    return (["Sensor Name_Test"],
            ["Units"],
            [value])
 
@@ -86,36 +92,36 @@ def adc_1_channel_1(voltage):
 def adc_1_channel_2(voltage):
     return sensor_MQ131(voltage)
 def adc_1_channel_3(voltage):
-    return conversionFunctionTemplate(voltage)
+    return testing(voltage)
 def adc_1_channel_4(voltage):
-    return conversionFunctionTemplate(voltage)
+    return conversionFunctionTemplate(voltage,'a14')
 
 def adc_2_channel_1(voltage):
-    return conversionFunctionTemplate(voltage)
+    return conversionFunctionTemplate(voltage,'a21')
 def adc_2_channel_2(voltage):
-    return conversionFunctionTemplate(voltage)
+    return conversionFunctionTemplate(voltage,'a22')
 def adc_2_channel_3(voltage):
-    return conversionFunctionTemplate(voltage)
+    return conversionFunctionTemplate(voltage,'a23')
 def adc_2_channel_4(voltage):
-    return conversionFunctionTemplate(voltage)
+    return conversionFunctionTemplate(voltage ,'a4')
 
 def adc_3_channel_1(voltage):
-    return conversionFunctionTemplate(voltage)
+    return conversionFunctionTemplate(voltage,'a31')
 def adc_3_channel_2(voltage):
-    return conversionFunctionTemplate(voltage)
+    return conversionFunctionTemplate(voltage,'a32')
 def adc_3_channel_3(voltage):
-    return conversionFunctionTemplate(voltage)
+    return conversionFunctionTemplate(voltage,'a33')
 def adc_3_channel_4(voltage):
-    return conversionFunctionTemplate(voltage)
+    return conversionFunctionTemplate(voltage,'a34')
 
 def adc_4_channel_1(voltage):
-    return conversionFunctionTemplate(voltage)
+    return conversionFunctionTemplate(voltage,'a41')
 def adc_4_channel_2(voltage):
-    return conversionFunctionTemplate(voltage)
+    return conversionFunctionTemplate(voltage,'a42')
 def adc_4_channel_3(voltage):
-    return conversionFunctionTemplate(voltage)
+    return conversionFunctionTemplate(voltage,'a43')
 def adc_4_channel_4(voltage):
-    return conversionFunctionTemplate(voltage)
+    return conversionFunctionTemplate(voltage,'a44')
 
 
 sensor_functions = {
