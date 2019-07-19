@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 from influxAPI import InfluxConnection
-from conversionFunctions import sensor_functions
+from conversionFunctions_demo import sensor_functions
 import json
 
 #Declaring Global Variables

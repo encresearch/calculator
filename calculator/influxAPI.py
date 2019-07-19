@@ -23,10 +23,10 @@ class InfluxConnection():
 		"""Function to wait for the influxdb service to be available"""
 		try:
 			self.db_client.ping()
-			print("connected to db")
+			print(f"InfluxDBClient Connected | {datetime.now()}")
 			return None
 		except:
-			print("not yet")
+			print("InfluxDBClient Connection FAILED: Trying again (1s)")
 			time.sleep(1)
 			self.wait_for_influxdb()
 
@@ -34,10 +34,10 @@ class InfluxConnection():
 		"""Function to wait for the influxdb service to be available"""
 		try:
 			self.df_client.ping()
-			print("Data Frame Client Connected")
+			print(f"DataFrameClient Connected | {datetime.now()} ")
 			return None
 		except:
-			print("Data Frame Client Connection FAILED: Trying again (1s)")
+			print("DataFrameClient Connection FAILED: Trying again (1s)")
 			time.sleep(1)
 			self.wait_for_dataFrameClient()
 

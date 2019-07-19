@@ -42,7 +42,7 @@ def sensor_MQ9(adc_value):
 
     return (["Butane Sensor (MQ9)","Carbon Monoxide Sensor (MQ9)", "Methane Sensor (MQ9)"],
            ["ppm", "ppm", "ppm"],
-           [ppm_Butane, ppm_CarbonMonoxide, ppm_Methane])
+           [-1, -1, -1]) #ppm_Butane
 
 
 def sensor_MQ131(adc_value):
@@ -77,7 +77,7 @@ def sensor_MQ131(adc_value):
 
     return (["Ozone Sensor (MQ131)","Chlorine Gas Sensor (MQ131)", "Nitrogen Gas Sensor (MQ131)"],
            ["ppm", "ppm", "ppm"],
-           [ppm_Ozone, ppm_ChlorineGas, ppm_NitrogenDioxide])
+           [-1, -1, -1])
 
 
 def conversionFunctionTemplate(adc_value, inc):
@@ -86,8 +86,13 @@ def conversionFunctionTemplate(adc_value, inc):
 
     return (["Sensor Name" + inc],
            ["Units"],
-           [value])
+           [value-1000])
 
+def testing(adc_value):
+    value = adc_value
+    return (["Sensor Name_Test"],
+           ["Units"],
+           [value])
 
 
 #######################################Assigning conversion functions to ADC/Channel Values##########################################
@@ -97,7 +102,7 @@ def adc_1_channel_1(voltage):
 def adc_1_channel_2(voltage):
     return sensor_MQ131(voltage)
 def adc_1_channel_3(voltage):
-    return conversionFunctionTemplate(voltage,'a13')
+    return testing(voltage)
 def adc_1_channel_4(voltage):
     return conversionFunctionTemplate(voltage,'a14')
 
