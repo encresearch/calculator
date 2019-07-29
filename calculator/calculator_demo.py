@@ -61,12 +61,14 @@ def main():
 
         for adc_channel_pair in newDataIndexes:
 
+
             #Unpacking Dictionary
             adc = adc_channel_pair['adc']
             channel = adc_channel_pair['channel']
             newDataAmount = adc_channel_pair['amountOfData']
 
             #Running Query
+
             results = influxdb.get_n_recent_readings_with_condition(newDataAmount, adc, channel)
 
 
@@ -74,8 +76,10 @@ def main():
             data = results[0]['values']
 
             #Getting name of sensor to add to array that will be sent to inspector
-
-            sensorNames, _, _, = sensor_functions[adc][channel](data[0][1])
+            try:
+                sensorNames, _, _, = sensor_functions[adc][channel](data[0][1])
+            except Exception as tt:
+                print(tt)
 
 
             #print(f"Query for adc={adc} and channel={channel} Done: {str(sensorNames)} | {time.time()-initialTime}")
@@ -106,43 +110,47 @@ def main():
         print(f"Conversions Done  | {time.time()-initialTime}")
 
         #Converting data into a pandas dataframe to be appended to database
-        df = pd.DataFrame(converted_data)
+        try:
 
-        df['date_time'] = pd.to_datetime(df['timestamp'])
-        #set a DateTime index and delete the old time_stamp columns
-        df = df.set_index(pd.DatetimeIndex(df['date_time']))
-        del df['timestamp'], df['date_time']
-        #Seperate the dataframe by groups of adc'
+            df = pd.DataFrame(converted_data)
 
-        grouped = df.groupby(["sensorName", 'adc', 'channel', 'units'])
+            df['date_time'] = pd.to_datetime(df['timestamp'])
+            #set a DateTime index and delete the old time_stamp columns
+            df = df.set_index(pd.DatetimeIndex(df['date_time']))
+            del df['timestamp'], df['date_time']
+            #Seperate the dataframe by groups of adc'
 
-        print(f"Beginning to write to database | {time.time()-initialTime}")
-        for group in grouped.groups:
+            grouped = df.groupby(["sensorName", 'adc', 'channel', 'units'])
 
-            sensorName = group[0]
-            adc = group[1]
-            channel = group[2]
-            units = group[3]
+            print(f"Beginning to write to database | {time.time()-initialTime}")
+            for group in grouped.groups:
 
-            tags = dict(sensorName=sensorName, adc=adc, channel=channel)
+                sensorName = group[0]
+                adc = group[1]
+                channel = group[2]
+                units = group[3]
 
-            sub_df = grouped.get_group(group)[['data']]
-            sub_df.rename(columns={'date_time': 'date_time', 'data': str(units)}, inplace=True)
+                tags = dict(sensorName=sensorName, adc=adc, channel=channel)
 
-            measurementName = location +  "_" + sensorName
+                sub_df = grouped.get_group(group)[['data']]
+                sub_df.rename(columns={'date_time': 'date_time', 'data': str(units)}, inplace=True)
 
-            influxdb.df_client.write_points(sub_df, measurementName, tags=tags)
+                measurementName = location +  "_" + sensorName
 
-            #print(f"Written {measurementName} data to database  | {time.time()-initialTime}")
-            #print(str(sub_df.iloc[[0]]))
-        print(f"Written to database | {time.time()-initialTime}")
+                influxdb.df_client.write_points(sub_df, measurementName, tags=tags)
+
+                #print(f"Written {measurementName} data to database  | {time.time()-initialTime}")
+                #print(str(sub_df.iloc[[0]]))
+            print(f"Written to database | {time.time()-initialTime}")
 
 
-        #Potential Issue. Message still sends even if data fails to get pushed to influx because of try/except statement
-        client.publish(topic_inspector, json.dumps([location, inspectorPayload]))
-        print(f"Published to Inspector  | {time.time()-initialTime}" )
-        print("\n")
-        pass
+            #Potential Issue. Message still sends even if data fails to get pushed to influx because of try/except statement
+            client.publish(topic_inspector, json.dumps([location, inspectorPayload]))
+            print(f"Published to Inspector  | {time.time()-initialTime}" )
+            print("\n")
+            pass
+        except Exception as pp:
+            print(pp)
 
     #Establish Connection to the MQTT Broker
 

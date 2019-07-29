@@ -14,7 +14,17 @@ def sensor_MQ9(adc_value):
     MQ9_R0 = .2118
     max_voltage = 5
 
+    print(adc_value)
+
+
     voltage_value = adc_to_voltage(adc_value, max_voltage, ADC_resolution)
+
+    print(voltage_value)
+
+    if voltage_value == 0.0:
+        return (["Ozone Sensor (MQ131)","Chlorine Gas Sensor (MQ131)", "Nitrogen Gas Sensor (MQ131)"],
+               ["ppm", "ppm", "ppm"],
+               [-1.0, -1.0, -1.0])
 
     Rs_gas = (5-voltage_value)/voltage_value
 
@@ -30,7 +40,7 @@ def sensor_MQ9(adc_value):
     if ratio <= 0:
         return (["Butane Sensor (MQ9)","Carbon Monoxide Sensor (MQ9)", "Methane Sensor (MQ9)"],
                ["ppm", "ppm", "ppm"],
-               [-1, -1, -1])
+               [-1.0, -1.0, -1.0])
 
     ppm_log_Butane = (log10(ratio)-Butane_yint)/Butane_slope
     ppm_log_CarbonMonoxide = (log10(ratio)-CarbonMonoxide_yint)/CarbonMonoxide_slope
@@ -42,7 +52,7 @@ def sensor_MQ9(adc_value):
 
     return (["Butane Sensor (MQ9)","Carbon Monoxide Sensor (MQ9)", "Methane Sensor (MQ9)"],
            ["ppm", "ppm", "ppm"],
-           [-1, -1, -1]) #ppm_Butane
+           [-1.0, -1.0, -1.0]) #ppm_Butane
 
 
 def sensor_MQ131(adc_value):
@@ -50,6 +60,11 @@ def sensor_MQ131(adc_value):
     max_voltage = 5
 
     voltage_value = adc_to_voltage(adc_value, max_voltage, ADC_resolution)
+
+    if voltage_value == 0:
+        return (["Ozone Sensor (MQ131)","Chlorine Gas Sensor (MQ131)", "Nitrogen Gas Sensor (MQ131)"],
+               ["ppm", "ppm", "ppm"],
+               [-1.0, -1.0, -1.0])
 
     Rs_gas = (5-voltage_value)/voltage_value
 
@@ -65,7 +80,7 @@ def sensor_MQ131(adc_value):
     if ratio <= 0:
         return (["Ozone Sensor (MQ131)","Chlorine Gas Sensor (MQ131)", "Nitrogen Gas Sensor (MQ131)"],
                ["ppm", "ppm", "ppm"],
-               [-1, -1, -1])
+               [-1.0, -1.0, -1.0])
 
     ppm_log_Ozone = (log10(ratio)-Ozone_yint)/Ozone_slope
     ppm_log_ChlorineGas = (log10(ratio)-ChlorineGas_yint)/ChlorineGas_slope
@@ -77,12 +92,12 @@ def sensor_MQ131(adc_value):
 
     return (["Ozone Sensor (MQ131)","Chlorine Gas Sensor (MQ131)", "Nitrogen Gas Sensor (MQ131)"],
            ["ppm", "ppm", "ppm"],
-           [-1, -1, -1])
+           [-1.0, -1.0, -1.0])
 
 
 def conversionFunctionTemplate(adc_value, inc):
 
-    value = adc_value
+    value = 0.0
 
     return (["Sensor Name" + inc],
            ["Units"],
