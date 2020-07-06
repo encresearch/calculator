@@ -10,6 +10,7 @@ DB_PORT = int(os.getenv("DB_PORT", "8086"))
 DB_USERNAME = os.getenv("DB_USER", "root")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "root")
 DB_NAME = os.getenv("DB_NAME", "sensor_data")
+DB_CONNECTOR_TABLE = os.getenv("DB_CONNECTOR_TABLE", "raw_measurements")
 
 
 class InfluxConnection():
@@ -73,7 +74,7 @@ class InfluxConnection():
     def get_n_recent_readings(
         self,
         number_of_readings,
-        table_name="measurements"
+        table_name=DB_CONNECTOR_TABLE
     ):
         query_to_execute = (
             'select * from "{}" group by * order by DESC limit {}'
@@ -86,7 +87,7 @@ class InfluxConnection():
         number_of_readings,
         adc,
         channel,
-        table_name="measurements"
+        table_name=DB_CONNECTOR_TABLE
     ):
         query_to_execute = (
             'select * from "{}" where adc=\'{}\' and channel=\'{}\' group by *'

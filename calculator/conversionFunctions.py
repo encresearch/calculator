@@ -122,96 +122,96 @@ def conversionFunctionTemplate(adc_value, inc):
 # ######### Assigning conversion functions to ADC/Channel Values ###########
 
 # ######### ADC 1 #########
-def adc_1_channel_1(voltage):
+def adc_1_channel_0(voltage):
     return sensor_MQ9(voltage)
 
 
-def adc_1_channel_2(voltage):
+def adc_1_channel_1(voltage):
     return sensor_MQ131(voltage)
 
 
-def adc_1_channel_3(voltage):
+def adc_1_channel_2(voltage):
     return conversionFunctionTemplate(voltage, 'a13')
 
 
-def adc_1_channel_4(voltage):
+def adc_1_channel_3(voltage):
     return conversionFunctionTemplate(voltage, 'a14')
 
 
 # ######### ADC 2 #########
-def adc_2_channel_1(voltage):
+def adc_2_channel_0(voltage):
     return conversionFunctionTemplate(voltage, 'a21')
 
 
-def adc_2_channel_2(voltage):
+def adc_2_channel_1(voltage):
     return conversionFunctionTemplate(voltage, 'a22')
 
 
-def adc_2_channel_3(voltage):
+def adc_2_channel_2(voltage):
     return conversionFunctionTemplate(voltage, 'a23')
 
 
-def adc_2_channel_4(voltage):
+def adc_2_channel_3(voltage):
     return conversionFunctionTemplate(voltage, 'a4')
 
 
 # ######### ADC 3 #########
-def adc_3_channel_1(voltage):
+def adc_3_channel_0(voltage):
     return conversionFunctionTemplate(voltage, 'a31')
 
 
-def adc_3_channel_2(voltage):
+def adc_3_channel_1(voltage):
     return conversionFunctionTemplate(voltage, 'a32')
 
 
-def adc_3_channel_3(voltage):
+def adc_3_channel_2(voltage):
     return conversionFunctionTemplate(voltage, 'a33')
 
 
-def adc_3_channel_4(voltage):
+def adc_3_channel_3(voltage):
     return conversionFunctionTemplate(voltage, 'a34')
 
 
 # ######### ADC 4 #########
-def adc_4_channel_1(voltage):
+def adc_4_channel_0(voltage):
     return conversionFunctionTemplate(voltage, 'a41')
 
 
-def adc_4_channel_2(voltage):
+def adc_4_channel_1(voltage):
     return conversionFunctionTemplate(voltage, 'a42')
 
 
-def adc_4_channel_3(voltage):
+def adc_4_channel_2(voltage):
     return conversionFunctionTemplate(voltage, 'a43')
 
 
-def adc_4_channel_4(voltage):
+def adc_4_channel_3(voltage):
     return conversionFunctionTemplate(voltage, 'a44')
 
 
 sensor_functions = {
-    1: {
+    0: {
+        0: adc_1_channel_0,
         1: adc_1_channel_1,
         2: adc_1_channel_2,
-        3: adc_1_channel_3,
-        4: adc_1_channel_4
+        3: adc_1_channel_3
     },
-    2: {
+    1: {
+        0: adc_2_channel_0,
         1: adc_2_channel_1,
         2: adc_2_channel_2,
         3: adc_2_channel_3,
-        4: adc_2_channel_4
     },
-    3: {
+    2: {
+        4: adc_3_channel_0,
         1: adc_3_channel_1,
         2: adc_3_channel_2,
-        3: adc_3_channel_3,
-        4: adc_3_channel_4
+        3: adc_3_channel_3
     },
-    4: {
+    3: {
+        4: adc_4_channel_0,
         1: adc_4_channel_1,
         2: adc_4_channel_2,
-        3: adc_4_channel_3,
-        4: adc_4_channel_4
+        3: adc_4_channel_3
     }
 }

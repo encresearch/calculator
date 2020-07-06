@@ -1,3 +1,4 @@
+import os
 import time
 import json
 from datetime import datetime
@@ -8,10 +9,10 @@ import pandas as pd
 from calculator.influxAPI import InfluxConnection
 from calculator.conversionFunctions import sensor_functions
 
-BROKER_HOST = 'mqtt.eclipse.org'
-BROKER_PORT = 1883
-BROKER_KEEPALIVE = 120
-MQTT_CLIENT_ID = "/Calculator"
+BROKER_HOST = os.getenv("BROKER_HOST", "mqtt.eclipse.org")
+BROKER_PORT = int(os.getenv("BROKER_PORT", "1883"))
+BROKER_KEEPALIVE = int(os.getenv("BROKER_KEEPALIVE", "120"))
+MQTT_CLIENT_ID = os.getenv("MQTT_CLIENT_ID", "/Calculator")
 # MQTT Topic to communicate with Connector and Inpsector
 CONNECTOR_MQTT_TOPIC = "communication/influxdbUpdate"
 INPECTOR_MQTT_TOPIC = "communication/influxdbConverted"
@@ -35,7 +36,7 @@ def connect_to_broker(
 
 def main():
     """The main event."""
-    influxdb = InfluxConnection(db_host='localhost')
+    influxdb = InfluxConnection()
 
     def on_connect(client, userdata, flags, rc):
         """On Connect Function for MQTT Broker."""
@@ -188,7 +189,3 @@ def main():
 
     # Begin the connection loop, where within the loop, messages can be sent
     client.loop_forever()
-
-
-if __name__ == "__main__":
-    main()
