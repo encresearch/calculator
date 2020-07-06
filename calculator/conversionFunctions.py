@@ -3,12 +3,12 @@ from math import log10
 ADC_resolution_bits = 16
 ADC_resolution = (2**ADC_resolution_bits) - 1
 
+
 def adc_to_voltage(adc_value, max_voltage, adc_resolution):
     return adc_value * (max_voltage/adc_resolution)
 
 
-#######################################Sensor Functions##########################################
-
+# ################## Sensor Functions#############################
 
 def sensor_MQ9(adc_value):
     MQ9_R0 = .2118
@@ -28,21 +28,35 @@ def sensor_MQ9(adc_value):
     Methane_slope = -.380
 
     if ratio <= 0:
-        return (["Butane Sensor (MQ9)","Carbon Monoxide Sensor (MQ9)", "Methane Sensor (MQ9)"],
-               ["ppm", "ppm", "ppm"],
-               [-1, -1, -1])
+        return (
+            [
+                "Butane Sensor (MQ9)",
+                "Carbon Monoxide Sensor (MQ9)",
+                "Methane Sensor (MQ9)"
+            ],
+            ["ppm", "ppm", "ppm"],
+            [-1, -1, -1]
+        )
 
     ppm_log_Butane = (log10(ratio)-Butane_yint)/Butane_slope
-    ppm_log_CarbonMonoxide = (log10(ratio)-CarbonMonoxide_yint)/CarbonMonoxide_slope
-    ppm_log_Methane =  (log10(ratio)-Methane_yint)/Methane_slope
+    ppm_log_Methane = (log10(ratio)-Methane_yint)/Methane_slope
+    ppm_log_CarbonMonoxide = (
+        (log10(ratio) - CarbonMonoxide_yint) / CarbonMonoxide_slope
+    )
 
     ppm_Butane = 10**ppm_log_Butane
     ppm_CarbonMonoxide = 10**ppm_log_CarbonMonoxide
     ppm_Methane = 10**ppm_log_Methane
 
-    return (["Butane Sensor (MQ9)","Carbon Monoxide Sensor (MQ9)", "Methane Sensor (MQ9)"],
-           ["ppm", "ppm", "ppm"],
-           [ppm_Butane, ppm_CarbonMonoxide, ppm_Methane])
+    return (
+        [
+            "Butane Sensor (MQ9)",
+            "Carbon Monoxide Sensor (MQ9)",
+            "Methane Sensor (MQ9)"
+        ],
+        ["ppm", "ppm", "ppm"],
+        [ppm_Butane, ppm_CarbonMonoxide, ppm_Methane]
+    )
 
 
 def sensor_MQ131(adc_value):
@@ -63,75 +77,141 @@ def sensor_MQ131(adc_value):
     NitrogenDioxide_slope = -.367
 
     if ratio <= 0:
-        return (["Ozone Sensor (MQ131)","Chlorine Gas Sensor (MQ131)", "Nitrogen Gas Sensor (MQ131)"],
-               ["ppm", "ppm", "ppm"],
-               [-1, -1, -1])
+        return (
+            [
+                "Ozone Sensor (MQ131)",
+                "Chlorine Gas Sensor (MQ131)",
+                "Nitrogen Gas Sensor (MQ131)"
+            ],
+            ["ppm", "ppm", "ppm"],
+            [-1, -1, -1]
+        )
 
     ppm_log_Ozone = (log10(ratio)-Ozone_yint)/Ozone_slope
     ppm_log_ChlorineGas = (log10(ratio)-ChlorineGas_yint)/ChlorineGas_slope
-    ppm_log_NitrogenDioxide =  (log10(ratio)-NitrogenDioxide_yint)/NitrogenDioxide_slope
+    ppm_log_NitrogenDioxide = (
+        (log10(ratio) - NitrogenDioxide_yint) / NitrogenDioxide_slope
+    )
 
     ppm_Ozone = 10**ppm_log_Ozone
     ppm_ChlorineGas = 10**ppm_log_ChlorineGas
     ppm_NitrogenDioxide = 10**ppm_log_NitrogenDioxide
 
-    return (["Ozone Sensor (MQ131)","Chlorine Gas Sensor (MQ131)", "Nitrogen Gas Sensor (MQ131)"],
-           ["ppm", "ppm", "ppm"],
-           [ppm_Ozone, ppm_ChlorineGas, ppm_NitrogenDioxide])
+    return (
+        [
+            "Ozone Sensor (MQ131)",
+            "Chlorine Gas Sensor (MQ131)",
+            "Nitrogen Gas Sensor (MQ131)"
+        ],
+        ["ppm", "ppm", "ppm"],
+        [ppm_Ozone, ppm_ChlorineGas, ppm_NitrogenDioxide]
+    )
 
 
 def conversionFunctionTemplate(adc_value, inc):
 
     value = adc_value
 
-    return (["Sensor Name" + inc],
-           ["Units"],
-           [value])
+    return (
+        ["Sensor Name" + inc],
+        ["Units"],
+        [value]
+    )
 
 
+# ######### Assigning conversion functions to ADC/Channel Values ###########
 
-#######################################Assigning conversion functions to ADC/Channel Values##########################################
+# ######### ADC 1 #########
+def adc_1_channel_0(voltage):
+    return sensor_MQ9(voltage)
+
 
 def adc_1_channel_1(voltage):
-    return sensor_MQ9(voltage)
-def adc_1_channel_2(voltage):
     return sensor_MQ131(voltage)
+
+
+def adc_1_channel_2(voltage):
+    return conversionFunctionTemplate(voltage, 'a13')
+
+
 def adc_1_channel_3(voltage):
-    return conversionFunctionTemplate(voltage,'a13')
-def adc_1_channel_4(voltage):
-    return conversionFunctionTemplate(voltage,'a14')
+    return conversionFunctionTemplate(voltage, 'a14')
+
+
+# ######### ADC 2 #########
+def adc_2_channel_0(voltage):
+    return conversionFunctionTemplate(voltage, 'a21')
+
 
 def adc_2_channel_1(voltage):
-    return conversionFunctionTemplate(voltage,'a21')
+    return conversionFunctionTemplate(voltage, 'a22')
+
+
 def adc_2_channel_2(voltage):
-    return conversionFunctionTemplate(voltage,'a22')
+    return conversionFunctionTemplate(voltage, 'a23')
+
+
 def adc_2_channel_3(voltage):
-    return conversionFunctionTemplate(voltage,'a23')
-def adc_2_channel_4(voltage):
-    return conversionFunctionTemplate(voltage ,'a4')
+    return conversionFunctionTemplate(voltage, 'a4')
+
+
+# ######### ADC 3 #########
+def adc_3_channel_0(voltage):
+    return conversionFunctionTemplate(voltage, 'a31')
+
 
 def adc_3_channel_1(voltage):
-    return conversionFunctionTemplate(voltage,'a31')
+    return conversionFunctionTemplate(voltage, 'a32')
+
+
 def adc_3_channel_2(voltage):
-    return conversionFunctionTemplate(voltage,'a32')
+    return conversionFunctionTemplate(voltage, 'a33')
+
+
 def adc_3_channel_3(voltage):
-    return conversionFunctionTemplate(voltage,'a33')
-def adc_3_channel_4(voltage):
-    return conversionFunctionTemplate(voltage,'a34')
+    return conversionFunctionTemplate(voltage, 'a34')
+
+
+# ######### ADC 4 #########
+def adc_4_channel_0(voltage):
+    return conversionFunctionTemplate(voltage, 'a41')
+
 
 def adc_4_channel_1(voltage):
-    return conversionFunctionTemplate(voltage,'a41')
+    return conversionFunctionTemplate(voltage, 'a42')
+
+
 def adc_4_channel_2(voltage):
-    return conversionFunctionTemplate(voltage,'a42')
+    return conversionFunctionTemplate(voltage, 'a43')
+
+
 def adc_4_channel_3(voltage):
-    return conversionFunctionTemplate(voltage,'a43')
-def adc_4_channel_4(voltage):
-    return conversionFunctionTemplate(voltage,'a44')
+    return conversionFunctionTemplate(voltage, 'a44')
 
 
 sensor_functions = {
-                    1: {1: adc_1_channel_1, 2: adc_1_channel_2, 3: adc_1_channel_3, 4: adc_1_channel_4},
-                    2: {1: adc_2_channel_1, 2: adc_2_channel_2, 3: adc_2_channel_3, 4: adc_2_channel_4},
-                    3: {1: adc_3_channel_1, 2: adc_3_channel_2, 3: adc_3_channel_3, 4: adc_3_channel_4},
-                    4: {1: adc_4_channel_1, 2: adc_4_channel_2, 3: adc_4_channel_3, 4: adc_4_channel_4}
-                   }
+    0: {
+        0: adc_1_channel_0,
+        1: adc_1_channel_1,
+        2: adc_1_channel_2,
+        3: adc_1_channel_3
+    },
+    1: {
+        0: adc_2_channel_0,
+        1: adc_2_channel_1,
+        2: adc_2_channel_2,
+        3: adc_2_channel_3,
+    },
+    2: {
+        4: adc_3_channel_0,
+        1: adc_3_channel_1,
+        2: adc_3_channel_2,
+        3: adc_3_channel_3
+    },
+    3: {
+        4: adc_4_channel_0,
+        1: adc_4_channel_1,
+        2: adc_4_channel_2,
+        3: adc_4_channel_3
+    }
+}

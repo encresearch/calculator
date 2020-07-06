@@ -3,12 +3,12 @@ from math import log10
 ADC_resolution_bits = 16
 ADC_resolution = (2**ADC_resolution_bits) - 1
 
+
 def adc_to_voltage(adc_value, max_voltage, adc_resolution):
     return adc_value * (max_voltage/adc_resolution)
 
 
-#######################################Sensor Functions##########################################
-
+# ############### Sensor Functions ######################## #
 
 def sensor_MQ9(adc_value):
     MQ9_R0 = .2118
@@ -16,15 +16,19 @@ def sensor_MQ9(adc_value):
 
     print(adc_value)
 
-
     voltage_value = adc_to_voltage(adc_value, max_voltage, ADC_resolution)
 
     print(voltage_value)
 
     if voltage_value == 0.0:
-        return (["Ozone Sensor (MQ131)","Chlorine Gas Sensor (MQ131)", "Nitrogen Gas Sensor (MQ131)"],
-               ["ppm", "ppm", "ppm"],
-               [-1.0, -1.0, -1.0])
+        return (
+            [
+                "Ozone Sensor (MQ131)",
+                "Chlorine Gas Sensor (MQ131)", "Nitrogen Gas Sensor (MQ131)"
+            ],
+            ["ppm", "ppm", "ppm"],
+            [-1.0, -1.0, -1.0]
+        )
 
     Rs_gas = (5-voltage_value)/voltage_value
 
@@ -38,9 +42,15 @@ def sensor_MQ9(adc_value):
     Methane_slope = -.380
 
     if ratio <= 0:
-        return (["Butane Sensor (MQ9)","Carbon Monoxide Sensor (MQ9)", "Methane Sensor (MQ9)"],
-               ["ppm", "ppm", "ppm"],
-               [-1.0, -1.0, -1.0])
+        return (
+            [
+                "Butane Sensor (MQ9)",
+                "Carbon Monoxide Sensor (MQ9)",
+                "Methane Sensor (MQ9)"
+            ],
+            ["ppm", "ppm", "ppm"],
+            [-1.0, -1.0, -1.0]
+        )
 
     ppm_log_Butane = (log10(ratio)-Butane_yint)/Butane_slope
     ppm_log_CarbonMonoxide = (log10(ratio)-CarbonMonoxide_yint)/CarbonMonoxide_slope
